@@ -21,20 +21,38 @@
         />
       </div>
       <div v-else v-for="(task, index) of tasks" class="task-list">
-        <div class="task-item">
-          <input
-            @click="toggleIsDone(index)"
-            type="checkbox"
-            :checked="task.isDone"
-          />
+        <div class="divider">
+          <hr />
         </div>
-        <div class="task-item">
-          <h3 class="task-title">
-            <s v-if="task.isDone">{{ task.title }}</s>
-            <span v-else>{{ task.title }}</span>
-          </h3>
-          <p>{{ task.description }}</p>
-          <a @click="deleteTask(index)" href="#">{{ task.delete }}</a>
+        <div class="task-item-wrapper">
+          <div class="task-item">
+            <input
+              @click="toggleIsDone(index)"
+              type="checkbox"
+              :checked="task.isDone"
+            />
+          </div>
+          <div class="task-item">
+            <div class="task-item-title">
+              <h3 class="task-title">
+                <s v-if="task.isDone">{{ task.title }}</s>
+                <span v-else>{{ task.title }}</span>
+              </h3>
+              <p>{{ task.description }}</p>
+            </div>
+            <div class="time">
+              <h3>{{ getTime(task.createdAt) }}</h3>
+            </div>
+          </div>
+          <div class="task-item">
+            <button
+              @click="deleteTask(index)"
+              href="#"
+              class="button btn-delete"
+            >
+              {{ task.delete }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -75,7 +93,8 @@ export default (await import('vue')).defineComponent({
         title: this.titleValue,
         description: this.descriptionValue,
         delete: 'Delete',
-        isDone: false
+        isDone: false,
+        createdAt: new Date()
       });
       this.titleValue = '';
       this.descriptionValue = '';
@@ -87,6 +106,14 @@ export default (await import('vue')).defineComponent({
     },
     toggleIsDone(index) {
       this.tasks[index].isDone = !this.tasks[index].isDone;
+    },
+    getTime(time) {
+      const month = time.toLocaleString('default', { month: 'short'});
+      const date = time.getDate();
+      const hour = time.getHours();
+      const minute = time.getMinutes();
+
+      return `${month} ${date}, ${hour}:${minute}`
     }
   }
 });
@@ -95,6 +122,10 @@ export default (await import('vue')).defineComponent({
 <style>
 s {
   text-decoration-color: rgb(0, 63, 26);
+}
+hr {
+  width: 100%;
+  margin-bottom: 10px;
 }
 .content {
   color: #cce8e7;
@@ -122,6 +153,7 @@ s {
 .row:nth-child(2) {
   display: flex;
   flex-direction: column;
+  overflow: auto;
   flex: 0 0 80%;
 }
 .title {
@@ -130,6 +162,7 @@ s {
   align-self: flex-start;
 }
 .empty-tasks {
+  width: calc(100% - 20px);
   height: calc(100% - 20px);
   display: flex;
   justify-content: center;
@@ -150,19 +183,34 @@ s {
 .task-list {
   width: calc(100% - 20px);
   display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
+  flex-direction: column;
   margin-bottom: 10px;
-  overflow: auto;
+}
+.task-list:first-child div.divider hr {
+  display: none;
+}
+.task-item-wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 .task-item:first-child {
   flex: 1;
-  margin-top: 7px;
   display: flex;
   justify-content: center;
 }
 .task-item:nth-child(2) {
   flex: 8;
+  display: flex;
+  justify-content: space-between;
+}
+.task-item-title {
+  display: flex;
+  flex-direction: column;
+}
+.time {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
 }
 .button {
   appearance: button;
@@ -187,18 +235,19 @@ s {
   -webkit-user-select: none;
   vertical-align: middle;
 }
-
 .btn-save {
   background-color: #003f31;
   color: #c6fbff;
 }
-
 .btn-cancel {
   background-color: #4d4d4d;
   color: #f5f5f5;
 }
-
-.button:after {
+.btn-delete {
+  background-color: #5a0000;
+  color: #ffc7c7;
+}
+.button::after {
   background-clip: padding-box;
   background-color: #2cdfdf;
   border-radius: 16px;
@@ -211,34 +260,33 @@ s {
   top: 0;
   z-index: -1;
 }
-
-.btn-save:after {
+.btn-save::after {
   background-color: #128b71;
 }
-
-.btn-cancel:after {
+.btn-cancel::after {
   background-color: #bdbdbd;
 }
-
+.btn-delete::after {
+  background-color: #c53232;
+}
 .button:main,
 .button:focus {
   user-select: auto;
 }
-
 .button:hover {
   filter: brightness(1.5);
   -webkit-filter: brightness(1.5);
   color: #003b3f;
 }
-
 .btn-save:hover {
   color: #004234;
 }
-
 .btn-cancel:hover {
   color: #5f5f5f;
 }
-
+.btn-delete:hover {
+  color: #520000;
+}
 .button:disabled {
   cursor: auto;
 }
