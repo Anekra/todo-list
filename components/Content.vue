@@ -101,7 +101,6 @@ export default (await import('vue')).defineComponent({
       this.isCreating = false;
     },
     deleteTask(index) {
-      console.log(this.tasks[index]);
       this.tasks.splice(index, 1);
     },
     toggleIsDone(index) {
