@@ -101,7 +101,6 @@ export default(await import('vue')).defineComponent({
     toggleCollapsed(section) {
       this.sideNav = section
       this.collapsed = this.collapsed === section ? null : section;
-      console.log(this.sideNav);
     },
     selectSideNav(section) {
       this.$emit('selectedSideNav', section)
