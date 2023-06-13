@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="row">
-      <h1 class="title">Todo List</h1>
+      <h1 class="title">{{ contentSection }}</h1>
     </div>
     <div class="row">
       <div v-if="isTasksEmptyAndIsNotCreating" class="empty-tasks">
@@ -12,13 +12,24 @@
           v-model="titleValue"
           type="text"
           placeholder="title"
-          class="input"
+          class="input-text"
         />
         <textarea
           v-model="descriptionValue"
           placeholder="description"
-          class="input"
+          class="input-text"
         />
+        <div class="input-radio">
+          <div>
+            <input type="radio" class="input-radio-item">
+          </div>
+          <div>
+            <input type="radio" class="input-radio-item">
+          </div>
+          <div>
+            <input type="radio" class="input-radio-item">
+          </div>
+        </div>
       </div>
       <div v-else v-for="(task, index) of tasks" class="task-list">
         <div class="divider">
@@ -107,13 +118,16 @@ export default (await import('vue')).defineComponent({
       this.tasks[index].isDone = !this.tasks[index].isDone;
     },
     getTime(time) {
-      const month = time.toLocaleString('default', { month: 'short'});
+      const month = time.toLocaleString('default', { month: 'short' });
       const date = time.getDate();
       const hour = time.getHours();
       const minute = time.getMinutes();
 
-      return `${month} ${date}, ${hour}:${minute}`
+      return `${month} ${date}, ${hour}:${minute}`;
     }
+  },
+  props: {
+    contentSection: String
   }
 });
 </script>
@@ -133,6 +147,7 @@ hr {
   height: 100%;
   background-color: #324b4b;
   padding: 16px 16px;
+  border-radius: 20px;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -173,11 +188,44 @@ hr {
   display: flex;
   flex-direction: column;
 }
-.input {
+.input-text {
   width: 100%;
   max-width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+}
+.input-radio {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.input-radio .input-radio-item {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  outline: none;
+}
+.input-radio .input-radio-item::before {
+  content: "";
+  display: inline-block;
+  width: 190px;
+  height: 190px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.input-radio .input-radio-item:first-child:checked::before {
+  background-color: red;
+}
+.input-radio .input-radio-item:nth-child(2):checked::before {
+  background-color: green;
+}
+.input-radio .input-radio-item:last-child:checked::before {
+  background-color: blue;
 }
 .task-list {
   width: calc(100% - 20px);

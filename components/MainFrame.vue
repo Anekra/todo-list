@@ -1,9 +1,24 @@
 <template>
   <div class="main-frame">
-    <SideBar />
-    <Content />
+    <SideBar @selected-side-nav="handleSideNav" />
+    <Content :contentSection="selectedSideNav" />
   </div>
 </template>
+
+<script>
+export default (await import('vue')).defineComponent({
+  data() {
+    return {
+      selectedSideNav: `Today's Tasks`
+    };
+  },
+  methods: {
+    handleSideNav(section) {
+      this.selectedSideNav = section;
+    }
+  }
+});
+</script>
 
 <style>
 .main-frame {

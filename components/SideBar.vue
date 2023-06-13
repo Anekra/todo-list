@@ -11,12 +11,22 @@
     </div>
     <div class="sidenav-item">
       <ul class="sidenav-item-wrapper">
-        <div @click="toggleCollapsed('todayTasks')" class="sidenav-item-title">
+        <div
+          @click="toggleCollapsed(todayTasks), selectSideNav(todayTasks)"
+          class="sidenav-item-title"
+        >
           <Icon name="ic:baseline-edit-note" size="1.5rem" />
-          <h4>Today's task</h4>
-          <Icon :name="collapsed === 'todayTasks' ? 'ic:outline-chevron-left' : 'ic:outline-chevron-right'" size="1.5rem" />
+          <h4>Today's tasks</h4>
+          <Icon
+            :name="
+              collapsed === todayTasks
+                ? 'ic:outline-keyboard-arrow-up'
+                : 'ic:baseline-keyboard-arrow-down'
+            "
+            size="1.5rem"
+          />
         </div>
-        <div v-if="collapsed === 'todayTasks'" class="sidenav-item-list">
+        <div v-if="collapsed === todayTasks && sideNav === todayTasks" class="sidenav-item-list">
           <li>
             <Icon name="ic:baseline-circle" size="0.8rem" color="red" />
             <p>Work</p>
@@ -34,12 +44,24 @@
     </div>
     <div class="sidenav-item">
       <ul class="sidenav-item-wrapper">
-        <div @click="toggleCollapsed('scheduledTasks')" class="sidenav-item-title">
+        <div
+          @click="
+            toggleCollapsed(scheduledTasks), selectSideNav(scheduledTasks)
+          "
+          class="sidenav-item-title"
+        >
           <Icon name="ic:baseline-assignment" size="1.5rem" />
           <h4>Scheduled tasks</h4>
-          <Icon :name="collapsed === 'scheduledTasks' ? 'ic:outline-chevron-left' : 'ic:outline-chevron-right'" size="1.5rem" />
+          <Icon
+            :name="
+              collapsed === scheduledTasks
+                ? 'ic:outline-keyboard-arrow-up'
+                : 'ic:baseline-keyboard-arrow-down'
+            "
+            size="1.5rem"
+          />
         </div>
-        <div v-if="collapsed === 'scheduledTasks'" class="sidenav-item-list">
+        <div v-if="collapsed === scheduledTasks && sideNav === scheduledTasks" class="sidenav-item-list">
           <li>
             <Icon name="ic:baseline-circle" size="0.8rem" color="red" />
             <p>Work</p>
@@ -56,7 +78,7 @@
       </ul>
     </div>
     <div class="sidenav-item">
-      <div class="sidenav-item-title">
+      <div @click="toggleCollapsed(settings), selectSideNav(settings)" class="sidenav-item-title">
         <Icon name="ic:baseline-settings" size="1.5rem" />
         <h4>Settings</h4>
       </div>
@@ -65,16 +87,28 @@
 </template>
 
 <script>
-export default (await import('vue')).defineComponent({
+export default(await import('vue')).defineComponent({
   data() {
     return {
-      collapsed: true
+      collapsed: true,
+      todayTasks: `Today's Tasks`,
+      scheduledTasks: 'Scheduled Tasks',
+      settings: 'Settings',
+      sideNav: ''
     };
   },
   methods: {
     toggleCollapsed(section) {
+      this.sideNav = section
       this.collapsed = this.collapsed === section ? null : section;
+      console.log(this.sideNav);
+    },
+    selectSideNav(section) {
+      this.$emit('selectedSideNav', section)
     }
+  },
+  emits: {
+    selectedSideNav: null
   }
 });
 </script>
