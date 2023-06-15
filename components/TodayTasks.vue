@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div v-else v-for="(task, index) of tasks" class="task-list">
+    <div v-else v-for="(task, index) of filteredTasks" class="task-list">
       <div class="divider">
         <hr />
       </div>
@@ -98,19 +98,39 @@ export default (await import('vue')).defineComponent({
   data() {
     return {
       tasks: [],
+      filteredTasks: this.filterTasks,
       isCreating: false,
       titleValue: '',
       descriptionValue: '',
       checked: false,
       radioRed: 'red',
       radioGreen: 'green',
-      radioBlue: 'blue'
+      radioBlue: 'blue',
+      category: ''
     };
   },
   computed: {
     isTasksEmptyAndIsNotCreating() {
       return this.tasks.length === 0 && !this.isCreating;
     },
+    filterTasks() {
+      if (this.$props.contentSubSection === '') {
+        return this.tasks;
+      } else {
+        if (this.$props.contentSubSection === 'work') {
+          this.category = this.radioRed
+        }
+        else if (this.$props.contentSubSection === 'personal') {
+          this.category = this.radioGreen
+        }
+        else if (this.$props.contentSubSection === 'community') {
+          this.category = this.radioBlue
+        } else {
+          return this.tasks
+        }
+        return this.tasks.filter(task => task.category === this.category)
+      }
+    }
   },
   methods: {
     showAddTask() {
@@ -132,6 +152,7 @@ export default (await import('vue')).defineComponent({
       this.descriptionValue = '';
       this.isCreating = false;
       this.checked = false;
+      this.filteredTasks = this.tasks;
     },
     deleteTask(index) {
       this.tasks.splice(index, 1);
@@ -152,7 +173,13 @@ export default (await import('vue')).defineComponent({
     }
   },
   props: {
-    contentSection: String
+    contentSubSection: String
+  },
+  watch: {
+    contentSubSection(newTask) {
+      console.log(newTask);
+      this.filteredTasks = this.filterTasks
+    }
   }
 });
 </script>

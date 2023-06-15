@@ -12,7 +12,7 @@
     <div class="sidenav-item">
       <ul class="sidenav-item-wrapper">
         <div
-          @click="toggleCollapsed(todayTasks), selectSideNav(todayTasks)"
+          @click="toggleCollapsed(todayTasks), selectSideNav(todayTasks), selectSideNavSection()"
           class="sidenav-item-title"
         >
           <Icon name="ic:baseline-edit-note" size="1.5rem" />
@@ -26,16 +26,19 @@
             size="1.5rem"
           />
         </div>
-        <div v-if="collapsed === todayTasks && sideNav === todayTasks" class="sidenav-item-list">
-          <li>
+        <div
+          v-if="collapsed === todayTasks && sideNav === todayTasks"
+          class="sidenav-item-list"
+        >
+          <li @click="selectSideNavSection(categories[0])">
             <Icon name="ic:baseline-circle" size="0.8rem" color="red" />
             <p>Work</p>
           </li>
-          <li>
+          <li @click="selectSideNavSection(categories[1])">
             <Icon name="ic:baseline-circle" size="0.8rem" color="green" />
             <p>Personal</p>
           </li>
-          <li>
+          <li @click="selectSideNavSection(categories[2])">
             <Icon name="ic:baseline-circle" size="0.8rem" color="blue" />
             <p>Comunity</p>
           </li>
@@ -61,7 +64,10 @@
             size="1.5rem"
           />
         </div>
-        <div v-if="collapsed === scheduledTasks && sideNav === scheduledTasks" class="sidenav-item-list">
+        <div
+          v-if="collapsed === scheduledTasks && sideNav === scheduledTasks"
+          class="sidenav-item-list"
+        >
           <li>
             <Icon name="ic:baseline-circle" size="0.8rem" color="red" />
             <p>Work</p>
@@ -78,7 +84,10 @@
       </ul>
     </div>
     <div class="sidenav-item">
-      <div @click="toggleCollapsed(settings), selectSideNav(settings)" class="sidenav-item-title">
+      <div
+        @click="toggleCollapsed(settings), selectSideNav(settings)"
+        class="sidenav-item-title"
+      >
         <Icon name="ic:baseline-settings" size="1.5rem" />
         <h4>Settings</h4>
       </div>
@@ -87,23 +96,28 @@
 </template>
 
 <script>
-export default(await import('vue')).defineComponent({
+export default (await import('vue')).defineComponent({
   data() {
     return {
       collapsed: true,
       todayTasks: `Today's Tasks`,
       scheduledTasks: 'Scheduled Tasks',
       settings: 'Settings',
-      sideNav: ''
+      sideNav: '',
+      categories: ['work', 'personal', 'community'],
+      sideNavSection: ''
     };
   },
   methods: {
     toggleCollapsed(section) {
-      this.sideNav = section
+      this.sideNav = section;
       this.collapsed = this.collapsed === section ? null : section;
     },
     selectSideNav(section) {
-      this.$emit('selectedSideNav', section)
+      this.$emit('selectedSideNav', section);
+    },
+    selectSideNavSection(section) {
+      this.$emit('selectedSideNavSection', section);
     }
   },
   emits: {

@@ -1,7 +1,10 @@
 <template>
   <div class="main-frame">
-    <SideBar @selected-side-nav="handleSideNav" />
-    <Content :contentSection="selectedSideNav" />
+    <SideBar
+      @selected-side-nav="handleSideNav"
+      @selected-side-nav-section="handleSideNavSection"
+    />
+    <Content :contentSection="selectedSideNav" :contentSubSection="selectedSideNavSection" />
   </div>
 </template>
 
@@ -9,12 +12,16 @@
 export default (await import('vue')).defineComponent({
   data() {
     return {
-      selectedSideNav: `Today's Tasks`
+      selectedSideNav: `Today's Tasks`,
+      selectedSideNavSection: ''
     };
   },
   methods: {
     handleSideNav(section) {
       this.selectedSideNav = section;
+    },
+    handleSideNavSection(section) {
+      this.selectedSideNavSection = section
     }
   }
 });

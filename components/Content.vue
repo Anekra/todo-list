@@ -6,7 +6,7 @@
     <div class="row">
       <ScheduledTasks v-if="contentSection === 'Scheduled Tasks'" />
       <SettingsContent v-else-if="contentSection === 'Settings'" />
-      <TodayTasks v-else />
+      <TodayTasks v-else :contentSubSection="contentSubSection" />
     </div>
   </div>
 </template>
@@ -17,10 +17,11 @@ import SettingsContent from './SettingsContent.vue';
 import TodayTasks from './TodayTasks.vue';
 
 export default (await import('vue')).defineComponent({
-    props: {
-        contentSection: String
-    },
-    components: { ScheduledTasks, TodayTasks, SettingsContent }
+  props: {
+    contentSection: String,
+    contentSubSection: String
+  },
+  components: { ScheduledTasks, TodayTasks, SettingsContent }
 });
 </script>
 
@@ -36,6 +37,7 @@ export default (await import('vue')).defineComponent({
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow: visible;
 }
 .row:first-child {
   padding-bottom: 20px;
